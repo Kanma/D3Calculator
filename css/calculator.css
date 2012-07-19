@@ -1,0 +1,44 @@
+*
+{
+    font-family: Arial;
+    font-size: 14px;
+}
+
+
+div.inline
+{
+    float: left;
+    margin: 10px;
+}
+
+
+h2
+{
+    display: inline;
+}
+
+
+table.statistics
+{
+    border: 1px solid black;
+    margin-top: 5px;
+}
+
+
+table.statistics td.label
+{
+    padding-right: 10px;
+    font-style: italic;
+}
+
+
+table.statistics td.value
+{
+    font-weight: bold;
+}
+
+
+table.statistics td.separator
+{
+    border-top: 1px solid black;
+}
