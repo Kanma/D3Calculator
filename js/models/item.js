@@ -16,10 +16,11 @@ Diablo3.Item = function()
     this.vitality               = 0;
 
     // Offensive
-    this.additional_damage_min  = 0;
-    this.additional_damage_max  = 0;
+    this.damage_multiplier      = 0;
+    this.damage_bonus_min       = 0;
+    this.damage_bonus_max       = 0;
     this.critical_chance        = 0;   // %
-    this.critical_damages       = 0;   // %
+    this.critical_damage       = 0;   // %
     this.increased_attack_speed = 0;   // %
 
     // Defensive
@@ -56,3 +57,15 @@ Diablo3.Item = function()
         }
     }
 }
+
+//----------------------------------------------------------
+
+Diablo3.Item.prototype.__defineGetter__('isWeapon', function() {
+    return (this.damage_max != 0);
+});
+
+//----------------------------------------------------------
+
+Diablo3.Item.prototype.__defineGetter__('meanDamage', function() {
+    return (this.damage_max + this.damage_min) / 2;
+});

@@ -14,3 +14,9 @@ Diablo3.parse_json = function(data) {
                 return value;
             });
 }
+
+
+Diablo3.round = function(number, precision) {
+    var multiplier = Math.pow(10, precision);
+    return Math.round(number * multiplier) / multiplier;
+}
