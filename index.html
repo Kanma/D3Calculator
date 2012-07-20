@@ -5,7 +5,9 @@
     <script src="js/jquery.js" type="text/javascript"></script>
     <script src="js/diablo3.js" type="text/javascript"></script>
     <script src="js/models/hero.js" type="text/javascript"></script>
+    <script src="js/models/item.js" type="text/javascript"></script>
     <script src="js/views/statistics.js" type="text/javascript"></script>
+    <script src="js/monk.js" type="text/javascript"></script>
 </head>
 <body>
 
@@ -19,9 +21,7 @@
 
     <script type="text/javascript">
         jQuery(document).ready(function() {
-            var s = '{"__classname__":"Hero", "name":"Kanma","class":"monk","level":60,"items":{"head":null,"torso":null,"feet":null,"hands":null,"shoulders":null,"legs":null,"bracers":null,"mainHand":null,"offHand":null,"waist":null,"rightFinger":null,"leftFinger":null,"neck":null}}';
-
-            var hero = Diablo3.parse_json(s);
+            var hero = Diablo3.parse_json(JSON.stringify(hero_json));
 
             $('#base_statistics_container')[0].appendChild(Diablo3.views.baseStatistics(hero, 'base_statistics'));
             $('#statistics_container')[0].appendChild(Diablo3.views.statistics(hero, 'statistics'));

@@ -97,10 +97,10 @@ Diablo3.Hero.prototype.__defineGetter__('baseVitality', function() {
 Diablo3.Hero.prototype.__defineGetter__('_primaryStat', function() {
     if (this.class == Diablo3.Classes.BARBARIAN)
         return this.strength;
-    // else if (this.class == Diablo3.Classes.DEMON_HUNTER) || (this.class == Diablo3.Classes.MONK)
-    //     return this.dexterity;
-    // else
-    //     return this.intelligence;
+    else if ((this.class == Diablo3.Classes.DEMON_HUNTER) || (this.class == Diablo3.Classes.MONK))
+        return this.dexterity;
+    else
+        return this.intelligence;
 });
 
 //----------------------------------------------------------
@@ -112,7 +112,7 @@ Diablo3.Hero.prototype.__defineGetter__('strength', function() {
     {
         if (this.items[location] !== null)
         {
-            // strength += this.items[location].strength;
+            strength += this.items[location].strength;
         }
     }
 
@@ -128,7 +128,7 @@ Diablo3.Hero.prototype.__defineGetter__('dexterity', function() {
     {
         if (this.items[location] !== null)
         {
-            // dexterity += this.items[location].dexterity;
+            dexterity += this.items[location].dexterity;
         }
     }
 
@@ -144,7 +144,7 @@ Diablo3.Hero.prototype.__defineGetter__('intelligence', function() {
     {
         if (this.items[location] !== null)
         {
-            // intelligence += this.items[location].intelligence;
+            intelligence += this.items[location].intelligence;
         }
     }
 
@@ -160,7 +160,7 @@ Diablo3.Hero.prototype.__defineGetter__('vitality', function() {
     {
         if (this.items[location] !== null)
         {
-            // vitality += this.items[location].vitality;
+            vitality += this.items[location].vitality;
         }
     }
 
@@ -176,7 +176,7 @@ Diablo3.Hero.prototype.__defineGetter__('armor', function() {
     {
         if (this.items[location] !== null)
         {
-            // armor += this.items[location].armor;
+            armor += this.items[location].armor;
         }
     }
 
