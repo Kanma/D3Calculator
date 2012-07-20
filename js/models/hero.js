@@ -188,16 +188,19 @@ Diablo3.Hero.prototype.__defineGetter__('increased_attack_speed', function() {
 Diablo3.Hero.prototype.__defineGetter__('attack_speed', function() {
     var attack_speed = 0;
 
-    if (this.dual_wielding)
+    if (this.items.mainHand != null)
     {
-        var period1 = 1.0 / this.items.mainHand.attack_speed;
-        var period2 = 1.0 / this.items.offHand.attack_speed;
+        if (this.dual_wielding)
+        {
+            var period1 = 1.0 / this.items.mainHand.attack_speed;
+            var period2 = 1.0 / this.items.offHand.attack_speed;
 
-        attack_speed = 2.0 / (period1 + period2);
-    }
-    else
-    {
-        attack_speed = this.items.mainHand.attack_speed;
+            attack_speed = 2.0 / (period1 + period2);
+        }
+        else
+        {
+            attack_speed = this.items.mainHand.attack_speed;
+        }
     }
 
     return attack_speed * (1 + this.increased_attack_speed / 100);
@@ -222,15 +225,18 @@ Diablo3.Hero.prototype.__defineGetter__('dps', function() {
     var attack_speed = 1.0;
     var passive_skill_boosts = 0;   // TODO
 
-    if (this.dual_wielding)
+    if (this.items.mainHand != null)
     {
-        weapon_damage = (this.items.mainHand.meanDamage + this.items.offHand.meanDamage + 2 * this.mean_damage_bonus) /
-                        (1.0 / this.items.mainHand.attack_speed + 1.0 / this.items.offHand.attack_speed);
-    }
-    else
-    {
-        weapon_damage = this.items.mainHand.meanDamage + this.mean_damage_bonus;
-        attack_speed = this.items.mainHand.attack_speed;
+        if (this.dual_wielding)
+        {
+            weapon_damage = (this.items.mainHand.meanDamage + this.items.offHand.meanDamage + 2 * this.mean_damage_bonus) /
+                            (1.0 / this.items.mainHand.attack_speed + 1.0 / this.items.offHand.attack_speed);
+        }
+        else
+        {
+            weapon_damage = this.items.mainHand.meanDamage + this.mean_damage_bonus;
+            attack_speed = this.items.mainHand.attack_speed;
+        }
     }
 
     return Diablo3.round(weapon_damage * attack_speed * (1 + this.increased_attack_speed / 100) * (1.0 + this.damage_multiplier / 100) *
@@ -244,10 +250,13 @@ Diablo3.Hero.prototype.__defineGetter__('spellDamageModifier', function() {
     var weapon_damage = 0;
     var passive_skill_boosts = 0;   // TODO
 
-    if (this.dual_wielding)
-        weapon_damage = this.items.mainHand.meanDamage + this.items.offHand.meanDamage + 2 * this.mean_damage_bonus;
-    else
-        weapon_damage = this.items.mainHand.meanDamage + this.mean_damage_bonus;
+    if (this.items.mainHand != null)
+    {
+        if (this.dual_wielding)
+            weapon_damage = this.items.mainHand.meanDamage + this.items.offHand.meanDamage + 2 * this.mean_damage_bonus;
+        else
+            weapon_damage = this.items.mainHand.meanDamage + this.mean_damage_bonus;
+    }
 
     return Diablo3.round(weapon_damage * (1.0 + this._primary_stat / 100), 1);
 });

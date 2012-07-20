@@ -2,6 +2,16 @@ Diablo3 = new Object();
 Diablo3.views = new Object();
 
 
+Diablo3.loadHeroesList = function()
+{
+    var json_heroes = localStorage.getItem("heroes");
+    if (json_heroes !== null)
+        return Diablo3.parse_json(json_heroes);
+
+    return new Array();
+}
+
+
 Diablo3.parse_json = function(data) {
     return JSON.parse(data, function(key, value)
             {
