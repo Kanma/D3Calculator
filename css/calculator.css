@@ -18,6 +18,66 @@ h2
 }
 
 
+div#heroes_panel
+{
+    padding: 10px;
+}
+
+
+ul.heroes_list
+{
+    padding-left: 0;
+}
+
+
+ul.heroes_list li
+{
+    display: block;
+    height: 32px;
+    line-height: 30px;
+    padding: 3px;
+    margin-bottom: 5px;
+    width: 200px;
+    background-color: #CCCCCC;
+    border-radius: 5px;
+    border: 2px solid #CCCCCC;
+}
+
+
+ul.heroes_list li:hover
+{
+    border: 2px solid #FFA200;
+}
+
+
+ul.heroes_list li.selected
+{
+    border: 2px solid #FFA200;
+    background-color: #FFA200;
+}
+
+
+ul.heroes_list li img
+{
+    vertical-align: middle;
+    width: 32px;
+    margin-right: 6px;
+}
+
+
+ul.heroes_list li span.level
+{
+    float: right;
+    font-size: 16px;
+}
+
+
+ul.heroes_list li.selected span
+{
+    font-weight: bold;
+}
+
+
 table.statistics
 {
     border: 1px solid black;
@@ -41,4 +101,18 @@ table.statistics td.value
 table.statistics td.separator
 {
     border-top: 1px solid black;
+}
+
+
+div.jqimessage input,
+div.jqimessage select
+{
+    margin-bottom: 4px;
+}
+
+
+div.jqimessage span.label
+{
+    display: inline-block;
+    width: 50px;
 }

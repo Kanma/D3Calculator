@@ -2,13 +2,27 @@ Diablo3 = new Object();
 Diablo3.views = new Object();
 
 
-Diablo3.loadHeroesList = function()
-{
+Diablo3.loadHeroesList = function() {
     var json_heroes = localStorage.getItem("heroes");
     if (json_heroes !== null)
         return Diablo3.parse_json(json_heroes);
 
     return new Array();
+}
+
+
+Diablo3.saveHeroesList = function(heroes) {
+    localStorage.setItem("heroes", JSON.stringify(heroes));
+}
+
+
+Diablo3.loadCurrentHeroName = function() {
+    return localStorage.getItem("current_hero");
+}
+
+
+Diablo3.saveCurrentHeroName = function(name) {
+    localStorage.setItem("current_hero", name);
 }
 
 

@@ -8,6 +8,18 @@ Diablo3.Classes.MONK         = "monk";
 Diablo3.Classes.WITCH_DOCTOR = "witch-doctor";
 Diablo3.Classes.WIZARD       = "wizard";
 
+Diablo3.Classes.LABELS = {
+    "barbarian":    "Barbarian",
+    "demon-hunter": "Demon Hunter",
+    "monk":         "Monk",
+    "witch-doctor": "Witch Doctor",
+    "wizard":       "Wizard",
+}
+
+Diablo3.Classes.image = function(hero) {
+    return 'diablo3/' + hero.class + (hero.male ? '_male' : '_female') + '.png';
+}
+
 
 /***************************************** HERO *****************************************/
 
@@ -28,6 +40,7 @@ Diablo3.Hero = function()
     {
         this.name  = arguments[0].name;
         this.class = arguments[0].class;
+        this.male  = arguments[0].male;
         this.level = arguments[0].level;
         this.items = arguments[0].items;
     }
@@ -35,6 +48,7 @@ Diablo3.Hero = function()
     {
         this.name  = null;
         this.class = null;
+        this.male  = true;
         this.level = 1;
 
         this.items             = new Object();

@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html>
 <head>
+    <meta charset='utf-8'>
     <title>Diablo 3 Calculator</title>
     <link rel="stylesheet" href="css/calculator.css" />
     <link rel="stylesheet" href="css/jquery-impromptu.css" />
@@ -23,16 +25,16 @@
             if (previous_list.length == 1)
                 $('#heroes_panel')[0].removeChild(previous_list[0]);
 
+            heroes.sort(function(x, y) { return x.name > y.name; });
+
             $('#heroes_panel')[0].appendChild(Diablo3.views.heroesList(heroes, selectHero, 'heroes_list'));
         }
 
 
-        function newHero()
+        function editHero(create)
         {
             function validate(e, v, message, form)
             {
-                var error = false;
-
                 var element = message.children('#name');
                 var error_name = (form.name == "");
                 if (!error_name)
@@ -47,17 +49,25 @@
                     }
                 }
 
-                if (error_name)
-                {
-                    element.css("border", "solid #FF0000 1px");
-                    error = true;
-                }
+                if (!error_name)
+                    element.css("border", "solid #000000 1px");
                 else
+                    element.css("border", "solid #FF0000 1px");
+
+                var element = message.children('#level');
+                var error_level = (form.level == "");
+                if (!error_level)
                 {
-                    element.css("border", "solid #FFFFFF 1px");
+                    var level = Number(form.level);
+                    error_level = (level == NaN) || (level < 1) || (level > 60);
                 }
 
-                return !error;
+                if (!error_level)
+                    element.css("border", "solid #000000 1px");
+                else
+                    element.css("border", "solid #FF0000 1px");
+
+                return !error_name && !error_level;
             }
 
 
@@ -65,29 +75,95 @@
             {
                 if (v !== undefined)
                 {
-                    var hero = new Diablo3.Hero();
-                    hero.name = form.name;
+                    if (create)
+                    {
+                        var hero   = new Diablo3.Hero();
+                        hero.name  = form.name;
+                        hero.class = form.class;
+                        hero.male  = (form.gender == 'male');
+                        hero.level = Number(form.level);
 
-                    heroes.push(hero);
+                        heroes.push(hero);
+                    }
+                    else
+                    {
+                        current_hero.name  = form.name;
+                        current_hero.class = form.class;
+                        current_hero.male  = (form.gender == 'male');
+                        current_hero.level = Number(form.level);
+                    }
 
                     onHeroesListChanged();
+
+                    Diablo3.saveHeroesList(heroes);
+
+                    selectHero(null);
+                    selectHero(form.name);
                 }
             }
 
 
-            var txt = 'Name: <input type="text" id="name" name="name" value="" /><br />';
+            if (!create && (current_hero == null))
+                return;
+
+            var txt = '<span class="label">Name:</span><input type="text" id="name" name="name" value="' + (!create ? current_hero.name : '') + '" /><br />';
+            
+            txt += '<span class="label">Class:</span><select id="class" name="class">';
+
+            for (var id in Diablo3.Classes.LABELS)
+                txt += '<option value="' + id + '"' + (!create && (current_hero.class == id) ? ' selected' : '') + '>' + Diablo3.Classes.LABELS[id] + '</option>';
+
+            txt += '</select>';
+
+            txt += '<input type="radio" name="gender" value="male" ' + (!create && current_hero.male ? 'checked ' : '') + ' /> Male';
+            txt += '<input type="radio" name="gender" value="female" ' + (!create && !current_hero.male ? 'checked ' : '') + ' /> Female<br />';
+
+            txt += '<span class="label">Level:</span><input type="text" id="level" name="level" value="' + (!create ? current_hero.level : '60') + '" /><br />';
 
             $.prompt(txt, {
                 submit: validate,
                 callback: callback,
             });
+        }
 
-            return false;
+
+        function deleteCurrentHero()
+        {
+            function callback(e, v, message, form)
+            {
+                if (v)
+                {
+                    heroes = heroes.filter(function(hero) { return (hero.name != current_hero.name); } )
+
+                    selectHero(null);
+
+                    onHeroesListChanged();
+                    Diablo3.saveHeroesList(heroes);
+                }
+            }
+
+            if (current_hero != null)
+            {
+                $.prompt('Are you sure that you want to delete ' + current_hero.name, {
+                    callback: callback,
+                    buttons: { Yes: true, No: false },
+                    focus: 1,
+                });
+            }
         }
 
 
         function selectHero(name)
         {
+            if (current_hero != null)
+            {
+                if (name == current_hero.name)
+                    return false;
+
+                $('#heroes_list #hero_' + current_hero.name).removeClass("selected");
+                current_hero = null;
+            }
+
             var element_to_remove = $('#base_statistics');
             if (element_to_remove.length == 1)
                 $('#base_statistics_container')[0].removeChild(element_to_remove[0]);
@@ -97,8 +173,8 @@
                 $('#statistics_container')[0].removeChild(element_to_remove[0]);
 
             $('#hero_details').hide();
-
-            current_hero = null;
+            $('#hero_edition').hide();
+            $('#hero_deletion').hide();
 
             for (var i = 0; i < heroes.length; ++i)
             {
@@ -110,10 +186,18 @@
                     $('#statistics_container')[0].appendChild(Diablo3.views.statistics(current_hero, 'statistics'));
 
                     $('#hero_details').show();
+                    $('#hero_edition').show();
+                    $('#hero_deletion').show();
+
+                    $('#heroes_list #hero_' + current_hero.name).addClass("selected");
+
+                    Diablo3.saveCurrentHeroName(name);
 
                     return false;
                 }
             }
+
+            Diablo3.saveCurrentHeroName(null);
 
             return false;
         }
@@ -124,7 +208,9 @@
 
     <div id="heroes_panel">
         <h1>Choose a hero</h1>
-        <a href="#" onclick="newHero(); return false;">Create a new hero</a>
+        <a href="#" onclick="editHero(true); return false;">Create a new hero</a>
+        <a id="hero_edition" href="#" onclick="editHero(false); return false;">Modify the hero</a>
+        <a id="hero_deletion" href="#" onclick="deleteCurrentHero(); return false;">Delete the hero</a>
     </div>
 
     <div id="hero_details" style="display: none">
@@ -141,6 +227,10 @@
         jQuery(document).ready(function() {
             heroes = Diablo3.loadHeroesList();
             onHeroesListChanged();
+
+            var name = Diablo3.loadCurrentHeroName();
+            if (name != null)
+                selectHero(name);
         });
     </script>
 
